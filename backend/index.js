@@ -5,10 +5,14 @@
 const express = require("express");
 const { createTodo, updateTodo } = require("./types");
 const { todo } = require("./db");
+const cors = require("cors");
 
 const app = express();
 
+// app.use(express.json());
 app.use(express.json());
+// app.use(express.urlencoded({ extended: true }));
+app.use(cors());
 
 app.post("/todo", async (req, res) => {
     const createPaylode = req.body;
@@ -34,28 +38,36 @@ app.post("/todo", async (req, res) => {
 
 });
 
+// app.get("/todos", async (req, res) => {
+//     try {
+//         const todos = await todo.find({});
+//         res.json({ todos });
+//     } catch (error) {
+//         console.error("Error fetching todos:", error);
+//         res.status(500).json({
+//             msg: "Failed to fetch todos",
+//             error,
+//         });
+//     }
+// });
+
+
 app.get("/todos", async (req, res) => {
     try {
-        const todos = await todo.find({});
-        res.json({ todos });
-    } catch (error) {
+        const todos = await todo.find();
+    // console.log(todos);
+
+     res.json({
+        todos
+    })
+    } catch(error) {
         console.error("Error fetching todos:", error);
         res.status(500).json({
-            msg: "Failed to fetch todos",
-            error,
-        });
+            msg: "failed to fetch todos",
+            
+        })
     }
 });
-
-
-// app.get("/todos", async (req, res) => {
-//     const todos = await todo.find();
-//     console.log(todos);
-
-//      res.json({
-//         todos
-//     })
-// });
 
 app.put("/completed", async (req, res) => {
     const updatePaylode = req.body;
